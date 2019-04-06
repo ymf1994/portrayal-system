@@ -1,0 +1,43 @@
+<el-dialog title="标签选择" width="860px" :show-close="false" class="tag-relation" :modal-append-to-body="false" :visible.sync="dialogVisible" :close-on-click-modal="false" :close-on-press-escape="false">
+    <div class="relation-body" v-if="tagArr.length && tagList.length">
+        <span @click="toggleLevel" class="level-toggle" v-if="tagArr.length < 2"><i class="el-icon-refresh"></i>{{ level === 0 ? '高级' : '简单'}}功能</span>
+        <div class="single-tag" v-if="level === 0">
+            <TagList
+              class="tag-list"
+              :tags="tagArr[0].tagList"
+              :tagList="tagList"
+              :relateType="tagArr[0].relateType"
+              @relateTypeChange="type => tagArr[0].relateType = type"
+              :submitMutation="submitMutation"
+            />
+        </div>
+        <ul class="multiple-tag" v-if="level === 1">
+            <li>
+                <label>关系</label>
+                <Relation class="multiple-relation-type" :relateType="relateType" @change="type => relateType = type" />
+            </li>
+            <li v-for="(tags, i) in tagArr" :key="tags.num">
+                <label>条件组{{i+1}}</label>
+                <TagList
+                  class="tag-list content-area"
+                  :tags="tags.tagList"
+                  :tagList="tagList"
+                  :key="tags.num"
+                  :relateType="tags.relateType"
+                  @relateTypeChange="type => tags.relateType = type"
+                  :submitMutation="submitMutation">
+                    <i class="el-icon-error tag-area-operate" v-if="tagArr.length > 1" @click="del(i)"></i>
+                </TagList>
+            </li>
+            <li>
+                <div class="content-area add-condition-area" @click="add">
+                    <i class="el-icon-plus"></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="success" @click="sure">确 定</el-button>
+    </div>
+</el-dialog>

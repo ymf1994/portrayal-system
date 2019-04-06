@@ -1,0 +1,121 @@
+{
+  "name": "portrayal-system",
+  "version": "1.0.0",
+  "description": "开课啦大数据画像系统",
+  "author": "杨君华 <yangjunhua@kaike.la>",
+  "private": true,
+  "scripts": {
+    "update-route-config": "node build/buildVueRoutesConfig.js",
+    "devServer": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "npm run mock & npm run devServer --env=mock",
+    "start": "npm run dev",
+    "build:stable": "npm run build --env=stable",
+    "build": "node build/build.js",
+    "mock": "mocker --port=5000 --watch=mock-data"
+  },
+  "dependencies": {
+    "axios": "0.18.0",
+    "date-gather": "^1.0.12",
+    "echarts": "^4.1.0",
+    "element-ui": "2.4.11",
+    "qs": "^6.6.0",
+    "reset.css": "2.0.2",
+    "vue": "2.5.2",
+    "vue-router": "3.0.1",
+    "vuex": "^3.1.0"
+  },
+  "devDependencies": {
+    "acorn": "6.1.0",
+    "autoprefixer": "7.1.2",
+    "babel-core": "6.22.1",
+    "babel-eslint": "10.0.1",
+    "babel-helper-vue-jsx-merge-props": "2.0.3",
+    "babel-loader": "7.1.1",
+    "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-syntax-dynamic-import": "6.18.0",
+    "babel-plugin-syntax-jsx": "6.18.0",
+    "babel-plugin-transform-runtime": "6.22.0",
+    "babel-plugin-transform-vue-jsx": "3.5.0",
+    "babel-preset-env": "1.3.2",
+    "babel-preset-stage-2": "6.22.0",
+    "chalk": "2.0.1",
+    "copy-webpack-plugin": "4.0.1",
+    "css-loader": "0.28.0",
+    "cz-conventional-changelog": "2.1.0",
+    "es6-promise": "4.2.5",
+    "eslint": "5.13.0",
+    "eslint-config-prettier": "4.0.0",
+    "eslint-config-standard": "12.0.0",
+    "eslint-plugin-html": "5.0.3",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-node": "8.0.1",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-standard": "4.0.0",
+    "eslint-plugin-vue": "5.1.0",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "1.1.4",
+    "friendly-errors-webpack-plugin": "1.6.1",
+    "ghooks": "2.0.4",
+    "glob": "7.1.3",
+    "html-webpack-plugin": "2.30.1",
+    "koa-mocker-cli": "1.0.5",
+    "less": "3.9.0",
+    "less-loader": "4.1.0",
+    "lint-staged": "8.1.3",
+    "lodash": "^4.17.11",
+    "lodash-webpack-plugin": "^0.11.5",
+    "mockjs": "^1.0.1-beta3",
+    "my-local-ip": "1.0.0",
+    "node-notifier": "5.1.2",
+    "optimize-css-assets-webpack-plugin": "3.2.0",
+    "ora": "1.2.0",
+    "portfinder": "1.0.13",
+    "postcss-import": "11.0.0",
+    "postcss-loader": "2.0.8",
+    "postcss-url": "7.2.1",
+    "prettier": "1.16.4",
+    "rimraf": "2.6.0",
+    "sass": "1.16.1",
+    "sass-loader": "7.1.0",
+    "semver": "5.3.0",
+    "shelljs": "0.7.6",
+    "stylus": "0.54.5",
+    "stylus-loader": "3.0.2",
+    "uglifyjs-webpack-plugin": "1.1.1",
+    "url-loader": "0.5.8",
+    "validate-commit-msg": "2.14.0",
+    "vue-loader": "14.2.4",
+    "vue-style-loader": "3.0.1",
+    "vue-template-compiler": "2.5.2",
+    "webpack": "3.6.0",
+    "webpack-bundle-analyzer": "2.9.0",
+    "webpack-dev-server": "2.9.1",
+    "webpack-merge": "4.1.0"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 10 versions",
+    "not ie <= 8"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "ghooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "validate-commit-msg"
+    }
+  },
+  "lint-staged": {
+    "./src/**/*.{js,vue}": [
+      "./node_modules/.bin/eslint --fix",
+      "./node_modules/.bin/prettier --write",
+      "git add"
+    ]
+  }
+}

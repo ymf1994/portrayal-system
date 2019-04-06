@@ -1,0 +1,88 @@
+.category-label-page {
+  padding 0
+  .no-data {
+    margin-top 20px
+    padding 20px 20px 20px 25px
+    background-color #fff
+    height 60px
+    line-height 60px
+    text-align center
+    width 100%
+    color #6f7180
+  }
+  .tabs-panel {
+    padding 20px
+    .search-wrap {
+      background-color #fff
+      padding 20px
+      display flex
+      border-top 4px solid #e8e8e8
+      .el-input {
+        width 240px
+      }
+      .btn {
+        margin-left 10px
+      }
+    }
+    .total-labels {
+      margin-top 20px
+      color #999
+    }
+    .show-all-btn-wrap {
+      margin-top 20px
+      display flex
+      justify-content center
+      color #666
+      &>* {
+        cursor pointer
+      }
+      i {
+        margin-left 5px
+      }
+    }
+    .second-category-label-box {
+      display flex
+      flex-wrap wrap
+      margin-left -15px
+    }
+    .third-category-label-box {
+      background-color #fff
+      margin-top 20px
+      padding-bottom 20px
+      .third-category-name {
+        padding-left 15px
+        line-height 60px
+        color #666
+        font-size 16px
+        border-top 4px solid #e8e8e8
+        border-bottom 1px solid #E7EAEC
+      }
+      .no-fourth-category-box, .fourth-category-box-panel {
+        display flex
+        flex-wrap wrap
+        .single-label-block {
+          width 272px
+          margin-left 17px
+        }
+      }
+      .fourth-category-box-nav {
+        display flex
+        align-items center
+        margin-top 20px
+        margin-left 17px
+        color #666
+        &-item {
+          color #999
+          margin-left 20px
+          cursor pointer
+          &:first-child {
+            margin-left 0
+          }
+          &.current {
+            color #4A90E2
+          }
+        }
+      }
+    }
+  }
+}

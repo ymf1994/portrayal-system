@@ -1,0 +1,59 @@
+.field {
+	display: flex;
+	align-items: center;
+	margin-left: 20px;
+
+	img.icon {
+		width: 16px;
+		margin-right: 5px;
+	}
+}
+
+.app-header {
+	background-color: #fff;
+	min-height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	font-size: 12px;
+	color: #333;
+	padding-right: 20px;
+	border-bottom: 1px solid #E7EAEC;
+
+	.user-info {
+		@extend .field;
+
+		.user-name {
+			max-width 6em
+			overflow hidden
+			text-overflow ellipsis
+			white-space nowrap
+			&:hover {
+				max-width none
+				cursor default
+			}
+		}
+
+		img.icon {
+			width: 24px;
+		}
+	}
+
+	.el-select {
+		width: 150px;
+		@extend .field;
+	}
+
+	.privilege-set {
+		color: #999;
+		@extend .field;
+		cursor: pointer;
+		display none
+	}
+
+	.logout {
+		color: #999;
+		@extend .field;
+		cursor: pointer;
+	}
+}

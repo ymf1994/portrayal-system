@@ -1,0 +1,191 @@
+<div>
+  <div class="app-container">
+    <div class="nav-tooltip" @click="createGroup" v-if="importFromUserData || tagFromRelationData">
+      <img class="nav-tooltip__icon" src="../../../assets/group-analyze/create-group.png" alt="">
+      <span class="nav-tooltip__name">生成群组</span>
+    </div>
+    <panel title="条件">
+      <div class="" slot="main">
+        <div class="cell">
+          <label for="">用户选择：</label>
+          <auto-complete
+            class="select-ipt"
+            v-model="fromCondition"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="请输入内容"
+            :selectOptionList="selectOptionList"
+            @select="handleFromSelect"
+            valueKey="name"
+            @clear="fromSelectRemove"
+            clearable
+          ></auto-complete>
+          <el-tag
+            v-if="currentFromTypeInfo"
+            class="tips"
+            closable
+            @close="clearFromTypeInfo"
+            type="info">
+            {{currentFromTypeInfo}}
+          </el-tag>
+          <el-button type="text" class="upload" v-if="fromCondition" @click="showFromCoditionDialog">{{tipFromContext}}</el-button>
+        </div>
+
+        <div class="cell" v-if="compareConditionVisible">
+          <label>用户选择：</label>
+          <auto-complete
+            class="select-ipt"
+            v-model="toCondition"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="请输入内容"
+            valueKey="name"
+            :selectOptionList="selectOptionList"
+            @select="handleToSelect"
+            @clear="toSelectRemove"
+            clearable
+          ></auto-complete>
+          <el-tag
+            v-if="currentToTypeInfo"
+            class="tips"
+            closable
+            @close="clearToTypeInfo"
+            type="info">
+            {{currentToTypeInfo}}
+          </el-tag>
+          <el-button type="text" class="upload" v-if="toCondition" @click="showToCoditionDialog">{{tipToContext}}</el-button>
+        </div>
+
+        <div class="btn">
+          <el-checkbox
+          v-model="compareConditionVisible"
+          class="compare-btn"
+          @change="clearChartList">对比分析</el-checkbox>
+          <el-button
+            class="analyze-btn"
+            type="success"
+            @click="analyze"
+            :disabled="!searchAble"
+            :loading="analyzeBtnLoading">分析</el-button>
+        </div>
+
+      </div>
+    </panel>
+
+    <panel title="用户特征" v-if="chartList.length">
+      <div class="tooltips" slot="tooltip">
+        <span v-if="!configVisible" @click="configChart">配置</span>
+        <p v-else>
+          <span @click="quit">退出配置</span>
+          <span class="save" @click="save">保存</span>
+        </p>
+      </div>
+
+      <!--不进行对比显示图表-->
+      <div class="chart-container" slot="main" v-if="!compareConditionVisible">
+        <el-row>
+          <el-col
+            :class="[index % 2 === 0 ? 'p-r-8' :'p-l-8' ]"
+            :span="12"
+            v-for="(chart, index) in chartList"
+            :key="index">
+            <el-card class="chart-card">
+              <config :iconVisible="configVisible" @preview="preview" :index="`${index}`"></config>
+              <chart
+                :type="String(chart.chartId)"
+                :id="`${index}`"
+                :data="chart.data"
+                v-if="chart"
+                :name="chartNameList"
+                :title="`${chart.tagName}分布`">
+              </chart>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+
+      <!--进行对比显示图表-->
+      <div class="chart-container" slot="main" v-else>
+        <el-card class="chart-card" v-for="(chart, index) in chartList" :key="index">
+          <config :iconVisible="configVisible" @preview="preview" :index="index"></config>
+          <chart
+            :type="String(chart.chartId)"
+            :id="String(index)"
+            :data="chart.data"
+            v-if="chart"
+            :name="chartNameList"
+            :title="`${chart.tagName}分布`">
+          </chart>
+        </el-card>
+      </div>
+
+    </panel>
+
+    <no-data v-if="noData"></no-data>
+
+  </div>
+  <import-user
+    v-if="importFromUserFlag"
+    :importUserData="importFromUserData"
+    @update:visible="flag => importFromUserFlag = flag"
+    @on-sure="importFromUserFn"
+  />
+  <import-user
+    v-if="importToUserFlag"
+    :importUserData="importToUserData"
+    @update:visible="flag => importToUserFlag = flag"
+    @on-sure="importToUserFn"
+  />
+  <tag-relation
+    v-if="tagFromRelationFlag"
+    :tagRelationData="tagFromRelationData"
+    @update:visible="flag => tagFromRelationFlag = flag"
+    @on-sure="selectFromTagRelationFn"
+  />
+  <tag-relation
+    v-if="tagToRelationFlag"
+    :tagRelationData="tagToRelationData"
+    @update:visible="flag => tagToRelationFlag = flag"
+    @on-sure="selectToTagRelationFn"
+  />
+
+
+  <el-dialog title="提示" :visible.sync="dialogQuitVisible">
+    <span>是否保存当前群体分析配置文件</span>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogQuitCancel">取 消</el-button>
+      <el-button type="primary" @click="dialogQuitConfirm">保存</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog title="群体分析名称" :visible.sync="dialogVisible">
+    <el-form :model="form" :rules="rules" ref="configForm">
+      <el-form-item prop="groupName">
+        <el-input v-model="form.groupName" autocomplete="off" :disabled="saveType === 2"></el-input>
+      </el-form-item>
+    </el-form>
+    <div class="config-list" v-if="userConfigList.length">
+      <p class="warning" v-if="userConfigList.length >= 10">已配置的群体画像分析超过10个，不能保存</p>
+      <p class="tips">当前已保存用户群体如下</p>
+      <ul class="list">
+        <li v-for="(item,index) in userConfigList" :key="index" class="list__cell">
+          <span class="name">{{index+1}}.{{item.name}}</span>
+          <img
+            class="preview__icon"
+            @click="previewConfig(item)"
+            src="../../../assets/group-analyze/preview.png"
+            alt="预览"
+          />
+          <img
+            class="delete__icon"
+            @click="deleteConfig(item,index)"
+            src="../../../assets/group-analyze/delete.png"
+            alt="预览"
+          />
+        </li>
+      </ul>
+    </div>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="dialogConfirm" :loading="saveAnalyzeBtnLoading">确 定</el-button>
+    </div>
+  </el-dialog>
+</div>

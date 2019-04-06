@@ -1,0 +1,181 @@
+<div class="label-manage-label-sheet-page">
+  <div class="search-wrap">
+    <el-input v-model="searchValue" placeholder="输入维度表名"></el-input>
+    <el-button class="btn" @click="getTableList">搜索</el-button>
+  </div>
+
+  <div class="search-result-wrap">
+    <el-table
+      class="search-result-table"
+      :data="tableList"
+      header-row-class-name="header-row"
+      border>
+      <el-table-column prop="dimTableName" label="维度表名" width="200"></el-table-column>
+      <el-table-column prop="tagName" label="标签名称"></el-table-column>
+      <el-table-column prop="category1Name" label="标签一级类目"></el-table-column>
+      <el-table-column prop="category2Name" label="标签二级类目"></el-table-column>
+      <el-table-column prop="creatorName" label="创建人"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="170"></el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <span
+            v-if="functions.ifEdit"
+            class="operate-btn edit-btn"
+            @click="operateDimTag(scope.row, 'edit')">编辑</span>
+          <span
+            v-if="functions.ifDelete && scope.row.deleteShow"
+            class="operate-btn"
+            @click="operateDimTag(scope.row, 'delete')">删除</span>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+
+  <el-dialog
+    ref="editDialog"
+    class="edit-dim-tag-dialog"
+    title="标签配置"
+    :visible.sync="visible.edit"
+    :close-on-click-modal="false"
+    :show-close="false"
+    :close-on-press-escape="false">
+
+    <el-tabs v-model="editDialogInfo.tabsActiveIndexStr" type="card">
+      <el-tab-pane label="枚举标签" name="0">
+        <el-form
+          :model="editDialogInfo.form0"
+          :rules="editDialogInfo.form0rules"
+          ref="form0"
+          label-width="7em"
+          label-position="right">
+          <el-form-item label="标签表名：">
+            <div>{{ operateTagInfo.dimTableName }}</div>  
+          </el-form-item>
+
+          <el-form-item label="标签名：" prop="tagName">
+            <el-input class="input" maxlength="16" v-model="editDialogInfo.form0.tagName"></el-input>
+          </el-form-item>
+
+          <el-form-item label="标签类型：" prop="checkTagType">
+            <el-select v-model="editDialogInfo.form0.checkTagType" placeholder="请选择">
+              <el-option
+                v-for="item in dimTagDetail.tagTypeList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="所属类目：" prop="checkCategoryIdList">
+            <el-cascader
+              :filterable="true"
+              v-model="editDialogInfo.form0.checkCategoryIdList"
+              :options="dimTagDetail.categoryList"
+              :change-on-select="true"
+              :props="{ children: 'children', label: 'label', value: 'value' }">
+            </el-cascader>
+          </el-form-item>
+
+          <el-form-item label="适用图表：">
+            <el-select multiple v-model="editDialogInfo.form0.checkChartList" placeholder="请选择">
+              <el-option
+                v-for="item in dimTagDetail.chartList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="计算逻辑：" prop="logic">
+            <el-input type="textarea" rows="4" maxlength="140" class="input" v-model="editDialogInfo.form0.logic"></el-input>
+          </el-form-item>
+
+          <el-form-item label="标签描述：" prop="description">
+            <el-input type="textarea" rows="4" maxlength="140" class="input" v-model="editDialogInfo.form0.description"></el-input>
+          </el-form-item>
+
+          <el-form-item label="表模型：" prop="dimKvList">
+            <table-model v-model="editDialogInfo.form0.dimKvList" :options="dimTagDetail.dimColumnList"></table-model>
+          </el-form-item>
+
+          <el-form-item label="级联关系：" prop="checkDimColumnList">
+            <custom-cascade v-model="editDialogInfo.form0.checkDimColumnList" :options="dimTagDetail.dimColumnList"></custom-cascade>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane label="map-键" name="1">
+        <el-form
+          :model="editDialogInfo.form1"
+          :rules="editDialogInfo.form1rules"
+          ref="form1"
+          label-width="7em"
+          label-position="right">
+          <el-form-item label="键表名：">
+            <div>{{ operateTagInfo.dimTableName }}</div>  
+          </el-form-item>
+
+          <el-form-item label="键名称：" prop="tagName">
+            <el-input class="input" maxlength="16" v-model="editDialogInfo.form1.tagName"></el-input>
+          </el-form-item>
+
+          <el-form-item label="键描述：" prop="description">
+            <el-input type="textarea" rows="4" maxlength="140" class="input" v-model="editDialogInfo.form1.description"></el-input>
+          </el-form-item>
+
+          <el-form-item label="表模型：" prop="dimKvList">
+            <table-model v-model="editDialogInfo.form1.dimKvList" :options="dimTagDetail.dimColumnList"></table-model>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane label="map-值" name="2">
+        <el-form
+          :model="editDialogInfo.form2"
+          :rules="editDialogInfo.form2rules"
+          ref="form2"
+          label-width="7em"
+          label-position="right">
+          <el-form-item label="键值表名：">
+            <div>{{ operateTagInfo.dimTableName }}</div>  
+          </el-form-item>
+
+          <el-form-item label="键值名称：" prop="tagName">
+            <el-input class="input" maxlength="16" v-model="editDialogInfo.form2.tagName"></el-input>
+          </el-form-item>
+
+          <el-form-item label="键值描述：" prop="description">
+            <el-input type="textarea" rows="4" maxlength="140" class="input" v-model="editDialogInfo.form2.description"></el-input>
+          </el-form-item>
+
+          <el-form-item label="表模型：" prop="dimKvList">
+            <table-model v-model="editDialogInfo.form2.dimKvList" :options="dimTagDetail.dimColumnList"></table-model>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="cancelEdit">取 消</el-button>
+      <el-button type="primary" @click="editDimTag">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog
+    class="delete-dim-tag-dialog"
+    title="提示"
+    :visible.sync="visible.delete"
+    :close-on-click-modal="false"
+    :show-close="false"
+    :close-on-press-escape="false">
+
+    <div>请确认是否删除 {{ operateTagInfo.dimTableName }} 维度表标签配置？</div>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible.delete = false">取 消</el-button>
+      <el-button type="primary" @click="deleteDimTag">确 定</el-button>
+    </span>
+  </el-dialog>
+</div>

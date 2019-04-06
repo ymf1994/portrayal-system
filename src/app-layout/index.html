@@ -1,0 +1,21 @@
+<div class="app-wrapper">
+  <el-container class="app">
+    <app-aside
+      :menu-list="systemInfo.menuInfoList"
+      v-if="systemInfo.menuInfoList && systemInfo.menuInfoList.length"
+    >
+    </app-aside>
+
+    <div ref="app-main-wrapper" class="app-main-wrapper" v-if="showView">
+      <app-header
+        :departments="systemInfo.dataList"
+        :user-name="userInfo.name"
+      >
+      </app-header>
+      <el-main class="app-main">
+        <router-view></router-view>
+      </el-main>
+      <app-footer></app-footer>
+    </div>
+  </el-container>
+</div>

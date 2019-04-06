@@ -1,0 +1,98 @@
+<div class="label-manage-label-detail-page">
+  <div class="crumbs-nav">
+    <div @click="historyBack(1)">{{ $route.query.categoryName }} <i class="el-icon-arrow-right"></i></div>
+    <div @click="historyBack(2)">{{ $route.query.childCategoryName }} <i class="el-icon-arrow-right"></i></div>
+    <div>标签详情</div>
+  </div>
+  <div class="detail-content" v-if="detail">
+    <div class="line-layout">
+      <div class="field-name">标签名称</div>
+      <div class="field-value">
+        <span>{{ detail.tagName }}</span>
+      </div>
+      <div class="field-name">标签值</div>
+      <div class="field-value">
+        <span>{{ detail.tagValue }}</span>
+      </div>
+    </div>
+    
+    <div class="line-layout">
+      <div class="field-name">覆盖用户数</div>
+      <div class="field-value">
+        <span>
+          <span>{{ adjustNumber(detail.coverNum) }}</span><span v-if="detail.coverPercent">（{{ detail.coverPercent }}%）</span>
+        </span>
+      </div>
+      <div class="field-name">标签准确度</div>
+      <div :class="['field-value', { 'hidden': typeof detail.accuracy !== 'number' }]">
+        <span>{{ detail.accuracy / 100 }}%</span>
+      </div>
+    </div>
+
+    <div class="line-layout">
+      <div class="field-name">标签类型</div>
+      <div class="field-value">
+        <span>{{ detail.tagTypeName }}</span>
+      </div>
+      <div class="field-name">是否变更</div>
+      <div class="field-value">
+        <span>{{ detail.ifChange }}</span>
+      </div>
+    </div>
+
+    <div class="line-layout">
+      <div class="field-name">变更几次</div>
+      <div class="field-value">
+        <span>{{ detail.changeNum }}</span>
+      </div>
+      <div class="field-name">变更时间</div>
+      <div class="field-value">
+        <span>{{ detail.changeTime }}</span>
+      </div>
+    </div>
+
+    <div class="line-layout">
+      <div class="field-name">一级类目</div>
+      <div class="field-value">
+        <span>{{ detail.firstCategoryName }}</span>
+      </div>
+      <div class="field-name">二级类目</div>
+      <div class="field-value">
+        <span>{{ detail.secondCategoryName }}</span>
+      </div>
+    </div>
+
+    <div class="line-layout">
+      <div class="field-name">三级类目</div>
+      <div class="field-value">
+        <span>{{ detail.thirdCategoryName }}</span>
+      </div>
+      <div class="field-name">四级类目</div>
+      <div class="field-value">
+        <span>{{ detail.fourthCategoryName }}</span>
+      </div>
+    </div>
+
+    <div class="line-layout">
+      <div class="field-name">标签描述</div>
+      <div class="field-value">
+        <el-input type="textarea" resize="none" :value="detail.description"></el-input>
+      </div>
+      <div class="field-name">计算逻辑</div>
+      <div class="field-value">
+        <el-input type="textarea" resize="none" :value="detail.logic"></el-input>
+      </div>
+    </div>
+
+    <div class="line-layout">
+      <div class="field-name">是否在线</div>
+      <div class="field-value">
+        <span>{{ detail.onlineStatus }}</span>
+      </div>
+      <div class="field-name">上线时间</div>
+      <div class="field-value">
+        <span>{{ detail.onlineTime }}</span>
+      </div>
+    </div>
+  </div>
+</div>

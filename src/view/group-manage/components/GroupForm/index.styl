@@ -1,0 +1,37 @@
+@import '~@style/variables.styl';
+
+.form {
+  background-color: #fff;
+  padding: 30px 80px;
+  .middle-input {
+    width: 240px;
+  }
+  .create-type-select {
+    float: left;
+  }
+  .create-type-operate {
+    margin-left: 250px;
+    // margin-right: 60px;
+    line-height: 40px;
+  }
+  .btn-text {
+    color: $commonGreen;
+    cursor: pointer;
+  }
+  .create-type-tag {
+    max-width: calc(100% - 90px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    position: relative;
+    padding-right: 22px;
+    /deep/ .el-icon-close {
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+  }
+  .num {
+    color: $commonGreen;
+  }
+}

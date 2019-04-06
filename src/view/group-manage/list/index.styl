@@ -1,0 +1,155 @@
+@import '~@style/variables.styl'
+
+.group-manage-container {
+  position relative
+  padding 20px
+  background #F1F1F1
+
+  .group-manage-header {
+    height 80px
+    background #fff
+    box-shadow 0 2px 0 0 #E7EAEC, inset 0 4px 0 0 #E7EAEC
+
+    .left-serch {
+      float left
+      margin-top 21px
+      margin-left 16px
+    }
+
+    .creat-group {
+      float right
+
+      .creat-group_button {
+        width 96px
+        background $commonGreen
+        border-color $commonGreen
+        margin-top 21px
+        margin-right 16px
+      }
+    }
+  }
+
+  .group-content {
+    background white
+    margin-top 20px
+    overflow hidden
+    .group-list {
+      background white
+      margin 16px 16px 45px 16px
+      .table-header {
+        display flex
+        height 48px
+        font-size: 0
+
+        li:first-child {
+          border-left 1px solid #E7EAEC
+        }
+
+        li:last-child {
+          flex 1.2
+          border-right 1px solid #E7EAEC
+        }
+
+        li {
+          flex 1
+          height 48px
+          border 1px solid #E7EAEC
+          border-left 0
+          position relative
+          background #F5F7FA
+          .header-common {
+            display inline-block
+            margin-left 10px
+            margin-top 17px
+            font-family PingFangSC-Semibold
+            font-size 14px
+            color #999999
+            letter-spacing 0
+            line-height 14px
+          }
+
+          .icon-common {
+            display inline-block
+            width 16px
+            margin-left 154px
+            height 16px
+            position absolute
+            right 12px
+            top 16px
+            cursor pointer
+
+            &.generalSort {
+              background url('../../../assets/group-manage/mr.png')
+            }
+
+            &.positiveSort {
+              background url('../../../assets/group-manage/rise.png')
+            }
+
+            &.invertedSort {
+              background url('../../../assets/group-manage/down.png')
+            }
+          }
+        }
+      }
+
+      .table-list {
+        display flex
+        height 47px
+        font-size 0
+
+        li:first-child {
+          border-left 1px solid #E7EAEC
+          text-overflow ellipsis
+          overflow hidden
+          white-space nowrap
+          display block
+        }
+
+        li:last-child {
+          flex 1.2
+          border-right 1px solid #E7EAEC
+          text-overflow ellipsis
+          overflow hidden
+          white-space nowrap
+          display block
+
+          span:first-child {
+            margin-left 0
+          }
+
+          span {
+            cursor pointer
+            color $commonGreen
+            margin-left 10px
+            font-size 12px
+          }
+        }
+
+        li {
+          flex 1
+          height 47px
+          line-height 47px
+          text-indent 10px
+          border 1px solid #E7EAEC
+          border-left 0
+          border-top 0
+          font-family PingFangSC-Regular
+          font-size 14px
+          color #666666
+          letter-spacing 0
+        }
+
+      }
+    .table-list:hover{
+      background #F5F7FA
+    }
+    }
+  }
+
+  .pagination {
+    background white
+    text-align center
+    padding-bottom 48px
+  }
+}

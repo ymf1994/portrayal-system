@@ -1,0 +1,28 @@
+<div class="app-header">
+  <div class="user-info">
+    <img class="icon" src="../../../assets/app-header/info.png">
+    <span class="user-name">{{userName}}</span>
+  </div>
+  <el-select
+    class="el-select"
+    size="mini"
+    v-model="selectedDepartmentId"
+    placeholder="请选择"
+    @change="departmentChange"
+  >
+    <el-option
+      v-for="item in departments"
+      :key="item.id"
+      :label="item.name"
+      :value="item.id">
+    </el-option>
+  </el-select>
+  <div class="privilege-set">
+    <img class="icon" src="../../../assets/app-header/set.png">
+    <span>设置</span>
+  </div>
+  <div class="logout" @click="logoutBtnClickListener">
+    <img class="icon" src="../../../assets/app-header/exit.png">
+    <span>退出</span>
+  </div>
+</div>

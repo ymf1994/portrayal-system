@@ -1,0 +1,114 @@
+<div class="category-label-page">
+  <tabs
+    v-if="categories && categories.length"
+    v-model="tabsActiveName"
+    :list="categories"
+    :props="{label: 'categoryName', value: 'id'}">
+  </tabs>
+
+  <div class="tabs-panels" v-if="categories && categories.length">
+    <div
+      class="tabs-panel"
+      v-for="(item, index) in categories"
+      v-show="tabsActiveName == item.id"
+      v-if="data[`category${item.id}`]"
+      :key="index">
+      <div class="search-wrap">
+        <el-input v-model="data[`category${item.id}`].searchValue" placeholder="请输入标签名称查询"></el-input>
+        <el-button class="btn" @click="updateCategoryLabelList(item.id)">搜索</el-button>
+      </div>
+      <div class="total-labels">此类目下共{{ data[`category${item.id}`].totalItems }}个标签</div>
+
+      <!-- 只有二级类目的标签布局 -->
+      <div
+        v-if="!data[`category${item.id}`].result.categoryInfoDTOList || !data[`category${item.id}`].result.categoryInfoDTOList.length"
+        class="second-category-label-box">
+        <single-label-block
+          :key="index"
+          v-for="(labelDetail, labelIndex) in data[`category${item.id}`].result.tagInfoDTOList"
+          :data="labelDetail"
+          @jump="gotoTagDetailRoute(labelDetail.id)">
+        </single-label-block>
+      </div>
+      <!-- 只有二级类目的标签布局 end -->
+
+      <!-- 三级或四级类目的标签布局 -->
+      <div
+        v-else
+        class="third-category-label-boxs">
+        <div
+          class="third-category-label-box"
+          v-for="(thirdCategory, thirdCategoryIndex) in data[`category${item.id}`].result.categoryInfoDTOList"
+          :key="thirdCategoryIndex">
+          <div class="third-category-name">{{thirdCategory.categoryName}}</div>
+
+          <!-- 三级类目布局 -->
+          <div v-if="!thirdCategory.categoryInfoDTOList || !thirdCategory.categoryInfoDTOList.length">
+            <div class="no-fourth-category-box">
+              <single-label-block
+                class="single-label-block"
+                :key="index"
+                v-for="(labelDetail, labelIndex) in thirdCategory.tagInfoDTOList"
+                :data="labelDetail"
+                @jump="gotoTagDetailRoute(labelDetail.id)"
+                v-show="labelIndex <= 7 || labelIndex >= 8 && thirdCategory.showAll">
+              </single-label-block>
+            </div>
+            <div class="show-all-btn-wrap" v-if="thirdCategory.tagInfoDTOList.length > 8">
+              <span v-if="thirdCategory.showAll" @click="thirdCategory.showAll = false">
+                <span>收起</span><i class="el-icon-arrow-up"></i>
+              </span>
+              <span v-else @click="thirdCategory.showAll = true">
+                <span>更多</span><i class="el-icon-arrow-down"></i>
+              </span>
+            </div>
+          </div>
+          <!-- 三级类目布局end -->
+
+          <!-- 四级类目布局 -->
+          <div class="fourth-category-box" v-else>
+            <div class="fourth-category-box-nav">
+              分类：<div
+                :class="['fourth-category-box-nav-item', { current: thirdCategory.tabIndex === fourthIndex }]"
+                v-for="(fourthCategory, fourthIndex) in thirdCategory.categoryInfoDTOList"
+                :key="fourthIndex"
+                @click="thirdCategory.tabIndex = fourthIndex">
+                {{ fourthCategory.categoryName }}
+              </div>
+            </div>
+            <div class="fourth-category-box-panels">
+              <div
+                v-for="(fourthCategory, fourthIndex) in thirdCategory.categoryInfoDTOList"
+                :key="fourthIndex"
+                v-show="thirdCategory.tabIndex === fourthIndex">
+                <div class="fourth-category-box-panel">
+                  <single-label-block
+                    class="single-label-block"
+                    :key="index"
+                    v-for="(labelDetail, labelIndex) in fourthCategory.tagInfoDTOList"
+                    :data="labelDetail"
+                    @jump="gotoTagDetailRoute(labelDetail.id)"
+                    v-show="labelIndex <= 7 || labelIndex >= 8 && fourthCategory.showAll">
+                  </single-label-block>
+                </div>
+
+                <div class="show-all-btn-wrap" v-if="fourthCategory.tagInfoDTOList.length > 8">
+                  <span v-if="fourthCategory.showAll" @click="fourthCategory.showAll = false">
+                    <span>收起</span><i class="el-icon-arrow-up"></i>
+                  </span>
+                  <span v-else @click="fourthCategory.showAll = true">
+                    <span>更多</span><i class="el-icon-arrow-down"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 四级类目布局end -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-data" v-else>暂无数据</div>
+</div>

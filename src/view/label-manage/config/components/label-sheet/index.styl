@@ -1,0 +1,75 @@
+@import('~@style/variables.styl')
+
+.label-manage-label-sheet-page {
+  .search-wrap {
+    background-color #fff
+    padding 20px
+    display flex
+    border-top 4px solid #e8e8e8
+    .el-input {
+      width 240px
+    }
+    .btn {
+      margin-left 10px
+    }
+  }
+
+  .search-result {
+    &-wrap {
+      background-color #fff
+      margin-top 20px
+      padding 20px
+    }
+    &-table {
+      tr.header-row th {
+        background-color #F5F7FA!important
+      }
+      .operate-btn {
+        font-size 12px
+        cursor pointer
+        color $commonGreen
+      }
+      .edit-btn {
+        margin-right 10px
+      }
+    }
+  }
+  
+  .delete-dim-tag-dialog {
+    .el-dialog {
+      width 400px
+    }
+  }
+  
+  .edit-dim-tag-dialog {
+    overflow hidden
+    .el-dialog {
+      width 730px
+      max-height 92%
+      position absolute
+      top 50%
+      left 50%
+      transform translate(-50%, -50%)
+      margin-top 0!important
+      display flex
+      flex-direction column
+      &__body {
+        flex 1
+        overflow auto
+        .el-tabs {
+          height 100%
+          display flex
+          flex-direction column
+          &__content {
+            padding-right 20px
+            flex 1
+            overflow auto
+          }
+        }
+      }
+    }
+    .el-input, .el-select, .el-cascader {
+      width 300px
+    }
+  }
+}

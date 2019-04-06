@@ -1,0 +1,26 @@
+<div class="table-model">
+  <div class="row table-model-title">
+    <div>value字段</div>
+    <div>id字段</div>
+  </div>
+  <div class="row" v-for="(item, index) in mapValue" :key="index">
+    <div>{{ item.dimTableValue }}</div>
+    <div>
+      <el-select
+        :ref="`elSelect${index}`"
+        size="medium"
+        v-model="mapValue[index].dimTableKey"
+        @change="selectChange(index)"
+        @focus="selectFocus(item.dimTableValue)"
+        placeholder="请选择">
+        <el-option
+          v-for="(item, i) in mapOptions"
+          :key="i"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled">
+        </el-option>
+      </el-select>
+    </div>
+  </div>
+</div>

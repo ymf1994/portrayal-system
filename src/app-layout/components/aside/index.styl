@@ -1,0 +1,26 @@
+@import('../../../common/styles/variables.styl')
+.app-aside {
+  min-width 210px!important
+  border-right none
+  overflow-y auto
+  padding-top 60px
+  img.menu-icon {
+    width 16px
+    margin-right 5px
+  }
+  .el-submenu__title i {
+    color #fff
+  }
+  .el-submenu__title:focus, .el-submenu__title:hover,
+  .el-menu-item:focus, .el-menu-item:hover {
+    background-color $themeActiveColor!important
+  }
+  .el-menu-item {
+    min-width 210px!important
+    display flex
+    align-items center
+    &.is-active {
+      background-color $themeActiveColor!important
+    }
+  }
+}

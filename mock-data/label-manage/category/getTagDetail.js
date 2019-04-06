@@ -1,0 +1,41 @@
+module.exports = {
+  'GET /ziyue/TagManageFacade/getTag': {
+    "code": "1000001",
+    "resultObject": {
+      "tagValue": "HM9Ru",
+      "categoryLevel": 5590,
+      "coverNum": 65482,
+      "onlineStatus": "bm07E",
+      "creatorId": 3562,
+      "creatorName": "AOPlw",
+      "description": "6RrMl",
+      "accuracy": 84412,
+      "changeNum": 10074,
+      "categoryName": "2PWb0",
+      "mapValueId": 67700,
+      "dimTableName": "bfMsN",
+      "firstCategoryName": "TaPlw",
+      "mapKeyId": 26290,
+      "factColumnType": "P9l1y",
+      "tagType": 1,
+      "onlineTime": "2019-03-01 16:37:55",
+      "id": 63126,
+      "factType": 7435,
+      "factColumnName": "5Pjo0",
+      "bisType": 33606,
+      "thirdCategoryName": "GDi5Q",
+      "tagName": "标签名称标签名称标签名称标签名称标签名称标签名称标签名称标签名称",
+      "fourthCategoryName": "UBtbP",
+      "coverPercent": 93140,
+      "secondCategoryName": "m6Erk",
+      "logic": "mfURP",
+      "categoryId": 8803,
+      "ifChange": "jjXAW",
+      "changeTime": "2019-03-01 16:37:55"
+    },
+    "message": "操作成功",
+    "serResult": true,
+    "sign": "62D285B8810DB338CB2CD272B93A1639",
+    "success": true
+  }
+}

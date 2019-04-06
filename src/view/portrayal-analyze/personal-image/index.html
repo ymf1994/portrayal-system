@@ -1,0 +1,123 @@
+<div>
+  <div class="app-container">
+    <panel title="条件">
+      <div slot="main">
+        <el-collapse-transition>
+          <div v-if="conditionResultShow">
+            <el-row class="search">
+              <el-cascader
+                expand-trigger="hover"
+                :options="options"
+                class="cascader-select"
+                @change="getQueryLabel"
+                separator="-"
+                v-model="select">
+              </el-cascader>
+              <el-input
+                placeholder="请输入内容"
+                v-model="queryValue"
+                class="input-with-select"
+                @keyup.enter.native="search">
+              </el-input>
+              <el-button @click="search" :disabled="searchAble" :loading="searchBtnLoading">搜索</el-button>
+            </el-row>
+            <el-row class="result">
+              <item
+                v-for="(item, index) in userList"
+                :key="index"
+                class="result__item"
+                @more="getUserData"
+                :data="item">
+              </item>
+            </el-row>
+          </div>
+          <div class="condition" v-else>
+            <span class="condition__title">{{queryLabel}}：</span>
+            <span class="condition__context">{{queryValue}}</span>
+          </div>
+        </el-collapse-transition>
+        <div class="more" @click="conditionResultShow = !conditionResultShow" v-if="userList.length">
+          <span>{{conditionResultShow ? '收起' : '更多'}}</span>
+          <i :class="[conditionResultShow ? 'el-icon-arrow-up': 'el-icon-arrow-down']"></i>
+        </div>
+      </div>
+    </panel>
+
+    <div>
+      <div class="info-section" v-if="modularList.length">
+
+        <panel :title="modularList[0].modelName" class="personal">
+          <div class="tooltips" slot="tooltip" @click="goTagDetail(0)">
+            <span>详细信息</span>
+            <i class="el-icon-arrow-right"></i>
+          </div>
+          <div class="personal__main" slot="main">
+            <img src="../../../assets/personal-image/female.png" alt="" class="avater" v-if="userSex == '女'">
+            <img src="../../../assets/personal-image/male.png" alt="" class="avater" v-else>
+            <ul class="info">
+              <li class="info__title">
+                <p v-for="(tag,index) in modularList[0].outlist[0].tags" :key="index">{{tag.name}}：</p>
+              </li>
+              <li class="info__context">
+                <p v-for="(tag,index) in modularList[0].outlist[0].tags">{{tag.value ? tag.value : "暂无数据"}}</p>
+              </li>
+            </ul>
+          </div>
+        </panel>
+
+        <panel :title="modularList[1].modelName" class="content">
+          <div class="tooltips" slot="tooltip" @click="goTagDetail(1)">
+            <span>详细信息</span>
+            <i class="el-icon-arrow-right"></i>
+          </div>
+          <ul class="content__tags" slot="main">
+            <li class="content__tags__group" v-for="(group,index) in modularList[1].outlist">
+              <p class="catagroy">{{group.label}}</p>
+              <p class="tag" v-for="(tag,tagIndex) in group.tags" :key="tagIndex">
+                <span>{{tag.name}}</span>
+                <span v-if="tag.value && typeof(tag.value) === 'string'">：{{tag.value}}</span>
+                <span v-if="tag.value && typeof(tag.value) !== 'string'">：<br><span v-for="(item,itemIndex) in tag.value">{{item.key}}：{{item.value}}；</span></span>
+              </p>
+            </li>
+          </ul>
+        </panel>
+
+        <panel :title="modularList[2].modelName" class="behaviour">
+          <div class="tooltips" slot="tooltip" @click="goTagDetail(2)">
+            <span>详细信息</span>
+            <i class="el-icon-arrow-right"></i>
+          </div>
+          <ul class="behaviour__tags" slot="main">
+            <li class="behaviour__tags__group" v-for="(group,index) in modularList[2].outlist">
+              <p class="catagroy">{{group.label}}</p>
+              <p class="tag" v-for="(tag,tagIndex) in group.tags" :key="tagIndex">
+                <span>{{tag.name}}</span>
+                <span v-if="tag.value && typeof(tag.value) === 'string'">：{{tag.value}}</span>
+                <span v-if="tag.value && typeof(tag.value) !== 'string'">：<br><span v-for="(item,itemIndex) in tag.value">{{item.key}}：{{item.value}}；</span></span>
+              </p>
+            </li>
+          </ul>
+        </panel>
+
+      </div>
+
+      <panel title="知识点掌握情况（节）" v-if="subjectList.length">
+        <div class="knowledge-main" slot="main">
+          <el-card class="chart-card">
+            <el-row>
+              <el-col :span="12">
+                <chart type="4" id="personal-image1" @change="changeSubject" :data="subjectList" size="md"></chart>
+              </el-col>
+              <el-col :span="12" v-loading="graphLoading">
+                <chart type="8" id="personal-image2" :data="knowledgeList" size="md" v-if="knowledgeList.length"></chart>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
+      </panel>
+    </div>
+
+    <no-data v-if="noData"></no-data>
+
+  </div>
+</div>

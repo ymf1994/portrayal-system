@@ -1,0 +1,51 @@
+<div class="label-category-page">
+  <div class="add-category">
+    <div class="btn" @click="dialogVisible = true">添加类目</div>
+  </div>
+  <div class="category-tree">
+    <el-tree 
+      :data="treeData"
+      :props="{ children: 'children', label: 'label' }"
+      :default-expand-all="true"
+    >
+    </el-tree>
+  </div>
+
+  <el-dialog
+    class="add-category-dialog"
+    title="添加类目"
+    :visible.sync="dialogVisible"
+    :close-on-click-modal="false"
+    :show-close="false"
+    :close-on-press-escape="false">
+    
+    <el-form
+      :model="form"
+      :rules="rules"
+      ref="form"
+      label-width="6em"
+      label-position="right"
+    >
+ 
+      <el-form-item label="所属类目">
+        <el-cascader
+          :filterable="true"
+          v-model="form.categoryIds"
+          size="medium"
+          :options="treeData"
+          :change-on-select="true"
+          :props="{ children: 'selectChildren', label: 'label', value: 'value' }"
+        ></el-cascader>
+      </el-form-item>
+
+      <el-form-item label="类目名称" prop="categoryName">
+        <el-input class="input" maxlength="6" v-model="form.categoryName"></el-input>
+      </el-form-item>
+    </el-form>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="addCategory">确 定</el-button>
+    </span>
+  </el-dialog>
+</div>

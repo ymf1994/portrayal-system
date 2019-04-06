@@ -1,0 +1,28 @@
+<div
+  v-loading="loading"
+  :element-loading-text="loadingText"
+  >
+    <Tab
+      class="tab"
+      v-model="groupType"
+      :list="tabList"
+    />
+    <div class="app-container">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item>群组管理</el-breadcrumb-item>
+        <el-breadcrumb-item>群组编辑</el-breadcrumb-item>
+      </el-breadcrumb>
+      <groupForm
+        :form="form"
+        class="form"
+        :validateMutation="validateMutation"
+        @validateChange="validateResultChange"
+      />
+      <div class="btn-group-area">
+        <!-- <el-button class="btn btn-sure" type="success" v-if="currentForm && currentForm.createType === 1" @click.prevent="preview">预览</el-button> -->
+        <el-button class="btn" @click="cancel">放弃</el-button>
+        <el-button class="btn btn-sure" type="success" @click="submit">修改</el-button>
+      </div>
+    </div>
+</div>
+

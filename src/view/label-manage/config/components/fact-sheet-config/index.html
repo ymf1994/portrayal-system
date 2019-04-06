@@ -1,0 +1,195 @@
+<div class="label-sheet-config-page">
+  <el-form
+    label-width="7em"
+    label-position="right">
+    <el-form-item label="事实表类型：">
+      <el-select v-model="selectedFactTableType" @change="getFactTableInfo" placeholder="请选择">
+        <el-option
+          v-for="item in factTableTypeList"
+          :key="item.type"
+          :label="item.typeName"
+          :value="item.type">
+        </el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="事实表名：">
+      <div>{{ factTableData.factTableName }}</div>
+    </el-form-item>
+
+    <el-form-item label="表说明：">
+      <el-input type="textarea" :readonly="true" rows="5" :value="factTableData.description"></el-input>
+    </el-form-item>
+
+    <el-form-item label="表结构：">
+      <el-table
+        class="search-result-table"
+        :data="factTableData.factColumnList"
+        header-row-class-name="header-row"
+        border>
+        <el-table-column prop="columnName" label="字段名"></el-table-column>
+        <el-table-column prop="tagName" label="标签名"></el-table-column>
+        <el-table-column label="标签配置" width="240">
+          <template slot-scope="scope">
+            <span
+              v-show="scope.row.ifEnum === 0 || scope.row.ifEnum !== 1"
+              :class="['operate-btn','enum-btn', { active: scope.row.ifEnum === 0 }]" 
+              @click="operateBtnListener(scope.row, 'enumLabelDialog')">枚举标签</span>
+
+            <span 
+              v-show="scope.row.ifEnum === 1 || scope.row.ifEnum !== 0"
+              :class="['operate-btn', 'non-enum-btn', { active: scope.row.ifEnum === 1 }]" 
+              @click="operateBtnListener(scope.row, 'nonEnumLabelDialog')">非枚举标签</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="其他操作">
+          <template slot-scope="scope">
+            <span 
+              :class="['operate-btn', 'empty-config-btn', { disabled: scope.row.ifEnum === 2 }]" 
+              @click="operateBtnListener(scope.row, 'deleteTagDialog')">清空配置</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-form-item>
+  </el-form>
+
+  <el-dialog
+    class="empty-label-config-dialog"
+    title="提示"
+    :visible.sync="visible.deleteTagDialog"
+    :close-on-click-modal="false"
+    :show-close="false"
+    :close-on-press-escape="false">
+
+    <div>请确认是否清空 {{ operateFactTableInfo.columnName }}字段 配置？</div>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible.deleteTagDialog = false">取 消</el-button>
+      <el-button type="primary" @click="emptylabelConfig">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog
+    class="select-enum-label-dialog"
+    title="选择枚举标签"
+    :visible.sync="visible.enumLabelDialog"
+    :close-on-click-modal="false"
+    :show-close="false"
+    :close-on-press-escape="false">
+
+    <div>
+      <el-input v-model="getEnumTagSearchValue" placeholder="输入标签名称"></el-input>
+      <el-button @click="getEnumTagCategoryList">搜索</el-button>
+    </div>
+
+    <el-tabs v-model="selectEnumTagTabsIndex" type="card">
+      <el-tab-pane
+        v-for="(item, index) in enumTagCategoryList"
+        :key="index"
+        :label="`${item.categoryName}${typeof item.tagNum === 'number' ? `(${item.tagNum})` : ''}`"
+        :name="`${item.categoryId}`">
+        <div class="single-category-tags">
+          <div
+            v-for="(tag, tagIndex) in item.tagList"
+            :key="tagIndex"
+            @click="itemEnumTagClickListener(tag)"
+            :class="['item-tag', { disabled: tag.ifSelect !== 1, selected: selectedEnumTagId === tag.id }]">{{ tag.name }}</div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="closeEnumTagConfigDialog">取 消</el-button>
+      <el-button type="primary" @click="saveEnumTagConfig">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog
+    ref="nonenumDialog"
+    class="select-nonenum-label-dialog"
+    title="选择非枚举标签"
+    :visible.sync="visible.nonEnumLabelDialog"
+    :close-on-click-modal="false"
+    :show-close="false"
+    :close-on-press-escape="false">
+
+    <el-form
+      :model="nonEnumLabelConfigForm"
+      :rules="nonEnumLabelConfigFormRules"
+      ref="nonEnumLabelConfigForm"
+      label-width="7em"
+      label-position="right">
+
+      <el-form-item label="标签名：" prop="tagName">
+        <el-input class="tag-name-input" maxlength="16" v-model="nonEnumLabelConfigForm.tagName"></el-input>
+      </el-form-item>
+
+      <el-form-item label="标签类型：" prop="checkTagType">
+        <el-select v-model="nonEnumLabelConfigForm.checkTagType" placeholder="请选择">
+          <el-option
+            v-for="item in nonEnumLabelConfig.tagTypeList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="所属类目：" prop="checkCategoryIdList">
+        <el-cascader
+          :filterable="true"
+          v-model="nonEnumLabelConfigForm.checkCategoryIdList"
+          :options="nonEnumLabelConfig.categoryList"
+          :change-on-select="true"
+          :props="{ children: 'children', label: 'label', value: 'value' }">
+        </el-cascader>
+      </el-form-item>
+
+      <el-form-item label="适用图表：">
+        <el-select multiple v-model="nonEnumLabelConfigForm.checkChartList" placeholder="请选择">
+          <el-option
+            v-for="item in nonEnumLabelConfig.chartList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="计算逻辑：">
+        <el-input type="textarea" rows="4" maxlength="140" class="input" v-model="nonEnumLabelConfigForm.logic"></el-input>
+      </el-form-item>
+
+      <el-form-item label="标签描述：">
+        <el-input type="textarea" rows="4" maxlength="140" class="input" v-model="nonEnumLabelConfigForm.description"></el-input>
+      </el-form-item>
+
+      <el-form-item label="键标签：" v-if="nonEnumLabelConfigForm.checkTagType === 5 || nonEnumLabelConfigForm.checkTagType === 9">
+        <div class="key-label-search-box">
+          <el-input class="key-label-search-input" v-model="keyLabelListSearchValue"></el-input>
+          <el-button class="search-key-label" @click="searchKeyLabelList">搜索</el-button>
+        </div>
+        <div class="key-label-list label-list" v-if="filterKeyLabelList && filterKeyLabelList.length">
+          <div
+            @click="itemNonEnumKeyTagClickListener(item.id)"
+            :class="['item-label', { selected: item.id === selectedNonEnumKeyTagId }]"
+            v-for="(item, index) in filterKeyLabelList" :key="index">{{ item.name }}</div>
+        </div>
+      </el-form-item>
+
+      <el-form-item label="值标签：" v-if="nonEnumLabelConfigForm.checkTagType === 5">
+        <div class="value-label-list label-list"  v-if="nonEnumLabelConfig.mapValueList && nonEnumLabelConfig.mapValueList.length">
+          <div
+            @click="itemNonEnumValueTagClickListener(item.id)"
+            :class="['item-label', { selected: item.id === selectedNonEnumValueTagId }]"
+            v-for="(item, index) in nonEnumLabelConfig.mapValueList" :key="index">{{ item.name }}</div>
+        </div>
+      </el-form-item>
+    </el-form>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="closeNonEnumTagConfigDialog">取 消</el-button>
+      <el-button type="primary" @click="saveNonEnumTagConfig">确 定</el-button>
+    </span>
+  </el-dialog>
+</div>

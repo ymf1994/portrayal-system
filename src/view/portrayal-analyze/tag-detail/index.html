@@ -1,0 +1,18 @@
+<div>
+  <div class="app-container">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>个体画像</el-breadcrumb-item>
+      <el-breadcrumb-item>{{name}}</el-breadcrumb-item>
+    </el-breadcrumb>
+    <panel :title="name" v-if="data.length">
+      <div class="tags-list" slot="main">
+        <p class="tag" v-for="(tag, tagIndex) in data" :key="tagIndex">
+          <span>{{tag.name}}</span>
+          <span v-if="tag.value && typeof(tag.value) === 'string'">：{{tag.value}}</span>
+          <span v-if="tag.value && typeof(tag.value) !== 'string'">：<span v-for="(item,itemIndex) in tag.value">{{item.key}}：{{item.value}}；</span></span>
+        </p>
+      </div>
+    </panel>
+    <no-data v-else></no-data>
+  </div>
+</div>

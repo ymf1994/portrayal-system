@@ -1,0 +1,72 @@
+<el-form ref="form" :model="tag" class="tag-item-form" :rules="rules" label-width="54px">
+    <el-form-item label="标签">
+        <el-row :gutter="5">
+            <el-col :span="7">
+                <el-form-item prop="tagId">
+                    <el-select v-model="tag.tagId" placeholder="请选择标签" class="form-input" filterable @change="tagChange">
+                        <el-option v-for="(tagOption, i) in tagOptionList" :label="tagOption.tagName" :value="tagOption.id" :key="i"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col v-if="!isShowCondition && tag.tagId" :span="10">
+              <el-button type="text" v-loading="true" v-if="loadConditionStatus === 1">条件加载中...</el-button>
+              <el-button @click="tagChange(tag.tagId)" v-if="loadConditionStatus === 3" type="text">
+                  条件加载失败, 点击可重试
+              </el-button>
+            </el-col>
+            <template v-else-if="isShowCondition && currentTagFormConditionList.length">
+                <el-col :span="5" v-for="(item, index) in currentTagFormConditionList" :key="index">
+                    <el-form-item
+                      ::key="index"
+                      :prop="item.prop"
+                    >
+                      <el-select
+                        v-if="item.type === 'select'"
+                        v-model="tag[item.prop]"
+                        placeholder="请选择"
+                        class="form-input"
+                        @change="itemChange(item, tag[item.prop])"
+                        filterable
+                      >
+                        <el-option
+                          v-for="(option, i) in item.options"
+                          v-if="i < 100"
+                          :label="option.name"
+                          :value="option.id"
+                          :key="i"
+                        ></el-option>
+                      </el-select>
+                      <el-cascader
+                        v-else-if="item.type === 'cascade'"
+                        placeholder="请选择"
+                        separator="-"
+                        v-model="cascaderValue"
+                        class="form-input"
+                        filterable
+                        change-on-select
+                        @change="cascadeChange(item, cascaderValue)"
+                        :options="item.options"
+                      >
+                      </el-cascader>
+                      <el-input
+                        v-else-if="getIsInput(item.type)"
+                        v-model="tag[item.prop]"
+                        class="form-input"
+                        placeholder="请输入"
+                      ></el-input>
+                      <el-date-picker
+                        v-else-if="item.type === 'date'"
+                        v-model="tag[item.prop]"
+                        class="form-input"
+                        :editable="false"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择日期"
+                      ></el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </template>
+        </el-row>
+        <slot></slot>
+    </el-form-item>
+</el-form>

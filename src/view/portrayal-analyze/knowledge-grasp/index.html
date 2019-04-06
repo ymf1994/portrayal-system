@@ -1,0 +1,161 @@
+<div>
+  <div class="app-container">
+    <panel title="场景说明">
+      <p class="desc" slot="main">{{sceneDes}}</p>
+    </panel>
+    <panel title="条件">
+      <div slot="main">
+        <div class="condition-list">
+
+          <div class="condition-list__item">
+            <label for=""><span class="required">* </span>学校：</label>
+            <el-tooltip
+              class="item"
+              effect="light"
+              :content="schoolName"
+              placement="bottom"
+              :disabled="schoolName.length < 10">
+              <el-select
+                v-model="schoolId"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请输入选择"
+                :remote-method="setSchoolList"
+                @change="changeSchool"
+                :loading="schoolSearchLoading">
+                <el-option
+                  v-for="item in schoolList"
+                  :key="item.schoolId"
+                  :label="item.schoolName"
+                  :value="item.schoolId">
+                </el-option>
+              </el-select>
+           </el-tooltip>
+          </div>
+
+          <div class="condition-list__item">
+            <label for="">年级：</label>
+            <el-select v-model="gradeId" @change="changeGrade" placeholder="请选择">
+              <el-option
+                v-for="item in gradeList"
+                :key="item.termId"
+                :label="item.termName"
+                :value="item.termId">
+              </el-option>
+            </el-select>
+          </div>
+
+          <div class="condition-list__item">
+            <label for="">班级：</label>
+            <el-select
+              v-model="classId"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入选择"
+              :remote-method="setClassList"
+              :disabled="!classSelectAble"
+              :loading="classSearchLoading">
+              <el-option
+                v-for="item in classList"
+                :key="item.classId"
+                :label="item.className"
+                :value="item.classId">
+              </el-option>
+            </el-select>
+          </div>
+
+          <div class="condition-list__item">
+            <label for=""><span class="required">* </span>科目：</label>
+            <el-select v-model="subjectId" clearable placeholder="请选择">
+              <el-option
+                v-for="item in subjectList"
+                :key="item.subjectId"
+                :label="item.subjectName"
+                :value="item.subjectId">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+
+        <div class="btn">
+          <el-button
+          class="analyze-btn"
+          type="success"
+          :disabled="!searchAble"
+          :loading="analyzeBtnLoading"
+          @click="setKnowledgeAnalysisList">分析</el-button>
+        </div>
+
+      </div>
+    </panel>
+
+    <panel title="用户特征" v-if="knowledgeAnalysisList.length">
+      <div class="chart-container" slot="main">
+        <el-card class="chart-card">
+          <chart type="1"
+            id="knowledge-grasp1"
+            :data="knowledgeAnalysisList"
+            @change="setKnowledgePeriodList"
+            size="sm"
+            :name="['掌握度']"
+            title="章知识点掌握情况"
+            :clickAble="true">
+          </chart>
+        </el-card>
+        <el-card class="chart-card">
+          <chart
+            type="1"
+            id="knowledge-grasp2"
+            :data="knowledgePeriodList"
+            size="sm"
+            :name="['用户数']"
+            title="章知识点掌握分布"
+            v-if="knowledgePeriodList.length">
+          </chart>
+        </el-card>
+        <el-card class="chart-card">
+          <el-row>
+            <el-col :span="12">
+              <chart type="1"
+                id="knowledge-grasp3"
+                :data="knowledgeSectionList"
+                :clickAble="true"
+                size="sm"
+                @change="changePoint"
+                :name="['掌握度']"
+                title="节知识点掌握情况"
+                v-if="knowledgeSectionList.length">
+              </chart>
+            </el-col>
+            <el-col :span="12">
+              <div class="knowledge-table">
+                <p class="knowledge-table__title">{{knowledgePeriodLastListName}}掌握情况</p>
+                <el-table
+                  header-cell-class-name="knowledge-table__td"
+                  cell-class-name="knowledge-table__dd"
+                  :data="knowledgePeriodLastList"
+                  border
+                  style="width: 100%">
+                  <el-table-column
+                    align="center"
+                    prop="knowledgePointName"
+                    label="知识点名称">
+                  </el-table-column>
+                  <el-table-column
+                    align="center"
+                    prop="masteryDegreeAve"
+                    label="平均掌握度">
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+          </el-row>
+        </el-card>
+      </div>
+    </panel>
+    <no-data v-if="noDataVisible"></no-data>
+  </div>
+</div>

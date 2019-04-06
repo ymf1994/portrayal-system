@@ -1,0 +1,47 @@
+<el-menu
+  class="app-aside"
+  mode="vertical"
+  :unique-opened="true"
+  background-color="#2B5B8B"
+  text-color="#FFF"
+  active-text-color="#FFF"
+  :default-active="`${defaultMenuActiveIndex}`"
+  :router="true">
+
+  <template v-for="(item, index) in serverMenuList">
+    <el-menu-item
+      v-if="!(item.menuInfoList && item.menuInfoList.length)"
+      :index="`${item.index}`"
+      :route="item.url">
+      <img v-if="item.icon" class="menu-icon" :src="`${menuIconStaticPrefix}${item.icon}`">
+      <span>{{ item.name }}</span>
+    </el-menu-item>
+
+    <el-submenu v-else :index="`${item.index}`">
+      <template slot="title">
+        <!-- 一行显示，消除icon与文本之间的空格 -->
+        <img v-if="item.icon" class="menu-icon" :src="`${menuIconStaticPrefix}${item.icon}`"><span>{{ item.name }}</span>
+      </template>
+
+      <template v-for="(firstItem, firstItemIndex) in item.menuInfoList">
+        <el-menu-item
+          v-if="!(firstItem.menuInfoList && firstItem.menuInfoList.length)"
+          :index="`${firstItem.index}`"
+          :route="firstItem.url">
+          <span>{{ firstItem.name }}</span>
+        </el-menu-item>
+
+        <el-submenu v-else :index="`${firstItem.index}`">
+          <template slot="title">{{ firstItem.name }}</template>
+          <el-menu-item
+            v-for="(secondItem, secondItemIndex) in firstItem.menuInfoList"
+            :key="secondItemIndex"
+            :index="`${secondItem.index}`"
+            :route="secondItem.url">
+            <span>{{ secondItem.name }}</span>
+          </el-menu-item>
+        </el-submenu>
+      </template>
+    </el-submenu>
+  </template>
+</el-menu>

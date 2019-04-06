@@ -1,0 +1,61 @@
+module.exports = {
+  'POST /ziyue/SinglePortraitFacade/listSinglePortrait': {
+    success: true,
+    resultList: [		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"女",
+			"uid":"12739",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"男",
+			"uid":"2135191",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"女",
+			"uid":"25409",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"女",
+			"uid":"25685",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"男",
+			"uid":"2115042",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"男",
+			"uid":"2118667",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"男",
+			"uid":"2112663",
+			"userName":"陈琪"
+		},
+		{
+			"factType":0,
+			"gradeName":"其他",
+			"sexName":"男",
+			"uid":"2127052",
+			"userName":"陈琪"
+		}]
+  }
+}

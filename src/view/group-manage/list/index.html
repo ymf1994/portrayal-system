@@ -1,0 +1,104 @@
+<div class="group-manage-container">
+  <div class="group-manage-header">
+    <div class="left-serch">
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item>
+          <el-input
+            v-model="serchContent"
+            class="left-input"
+            placeholder="请输入内容"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getTableData">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="creat-group">
+      <el-button @click="creatGroup()" type="primary" class="creat-group_button"
+        >创建群组</el-button
+      >
+    </div>
+  </div>
+  <div class="group-content">
+    <div class="group-list">
+      <ul class="table-header">
+        <li>
+          <span class="header-common">群组名称</span>
+        </li>
+        <li v-for="data in sortColumnList" :key="data.column">
+          <span class="header-common">{{ data.columnName }}</span>
+          <span
+            @click="sortChange(data.column)"
+            class="icon-common generalSort"
+            :class="{invertedSort:sortColumn==data.column&&sortType==0
+        ,positiveSort:sortType&&sortColumn==data.column}"
+          ></span>
+        </li>
+        <li>
+          <span class="header-common">操作</span>
+        </li>
+      </ul>
+      <ul class="table-list" v-for="item in dataList" :key="item.id">
+        <el-tooltip
+          :open-delay="400"
+          effect="dark"
+          :content="item.groupName"
+          placement="top-start"
+        >
+          <li>{{ item.groupName }}</li>
+        </el-tooltip>
+        <li>
+          {{ item.groupTypeName }}
+        </li>
+        <li>
+          {{ item.ifUpdateStr }}
+        </li>
+        <li>
+          {{ item.createTime }}
+        </li>
+        <li>
+          {{ item.updateTime }}
+        </li>
+        <li class="operate">
+          <span @click="analyze(item)">画像分析</span>
+          <span  @click="download(item)">导出</span>
+          <span @click="edit(item)">编辑</span>
+          <span @click="deleteGroup(item)">删除</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <el-dialog
+    title="提示"
+    :show-close="false"
+    :visible.sync="cancel"
+    width="420px"
+  >
+    <span class="delete-content"
+      >请确认是否要删除该用户/{{
+        operateGroupUser.groupTypeName
+      }},此群组目前在使用中</span
+    >
+    <span slot="footer" class="dialog-footer new-dialog-footer">
+      <el-button @click="cancel = false">取 消</el-button>
+      <el-button
+        class="creat-group_button"
+        type="primary"
+        @click="confirmDelete()"
+        >确 定</el-button
+      >
+    </span>
+  </el-dialog>
+  <div class="pagination block">
+    <el-pagination
+      :current-page.sync="currentPage"
+      @current-change="currentPageChange"
+      :page-size="pageSize"
+      layout="prev, pager, next, jumper"
+      :page-count="pageCount"
+    >
+    </el-pagination>
+  </div>
+</div>

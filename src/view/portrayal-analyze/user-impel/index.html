@@ -1,0 +1,25 @@
+<div>
+  <div class="app-container">
+    <panel title="场景说明">
+      <div slot="main">
+        <p class="desc">{{sceneDes}}</p>
+        <div class="user-chart" v-if="userChart">
+          <chart :type="String(userChart.chartId)" @change="changeUser" :data="userChart.params" :clickAble="true" size="lg" title=" "></chart>
+        </div>
+      </div>
+    </panel>
+
+    <panel title="用户特征" v-if="chartList.length">
+      <div slot="main" class="chart-container">
+        <el-row>
+          <el-col :span="12" v-for="(chart,index) in chartList" :key="index" :class="[index % 2 === 0 ? 'p-r-8' : 'p-l-8']">
+            <el-card class="chart-card" >
+              <chart :type="String(chart.chartId)" :id="String(index)" :data="chart.params" :title="chart.title"></chart>
+            </el-card>
+          </el-col>
+        </el-row>
+
+      </div>
+    </panel>
+  </div>
+</div>

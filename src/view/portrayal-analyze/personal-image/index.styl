@@ -1,0 +1,173 @@
+@import '~@style/variables';
+
+.app-container {
+	.m-r-10 {
+		margin-right: 10px;
+	}
+
+	.search {
+		padding: 20px 16px;
+		font-size: 0;
+
+		.cascader-select {
+			/deep/ .el-input__inner {
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+
+				&:focus {
+					border-color: #dcdfe6;
+				}
+			}
+
+			/deep/ .el-input.is-focus .el-input__inner {
+				border-color: #dcdfe6;
+			}
+		}
+
+		.input-with-select {
+			width: 240px;
+			margin: 0 7px 0 -3px;
+
+			/deep/ .el-input__inner {
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+			}
+
+			/deep/ .el-input-group__prepend {
+				background-color: #fff;
+			}
+		}
+	}
+
+	.condition {
+		padding: 16px;
+		font-size: 14px;
+		color: $fontDarkColor;
+
+		&__title {
+			display: inline-block;
+			margin-right: 10px;
+		}
+	}
+
+	.result {
+		padding: 0 11px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.more {
+		line-height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 14px;
+		color: $fontDarkColor;
+		cursor: pointer;
+
+		.el-icon-arrow-up, .el-icon-arrow-down {
+			color: $fontLightColor;
+			margin-left: 8px;
+		}
+	}
+
+	.tooltips {
+		font-size: 14px;
+		color: $fontLightColor;
+		cursor: pointer;
+	}
+
+	.info-section {
+		display: flex;
+		justify-content: space-around;
+
+		// 个人画像
+		.personal {
+			max-width: 326px;
+
+			&__main {
+				padding: 20px;
+
+				.avater {
+					width: 80px;
+					height: 80px;
+					border-radius: 50%;
+					margin: 5px auto 25px;
+					display: block;
+				}
+
+				.info {
+					display: flex;
+					font-size: 14px;
+
+					&__title {
+						text-align: right;
+						margin-right: 10px;
+						color: $fontLightColor;
+
+						p {
+							margin-bottom: 10px;
+
+							&:last-child {
+								margin-bottom: 0;
+							}
+						}
+					}
+
+					&__context {
+						color: $fontDarkColor;
+
+						p {
+							margin-bottom: 10px;
+
+							&:last-child {
+								margin-bottom: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.tag {
+			padding: 0 10px;
+			font-size: 14px;
+			color: $fontLightColor;
+			background-color: #f0f0f0;
+			border-radius: 4px;
+			line-height: 34px;
+			margin: 0 10px 10px 0;
+			display: inline-block;
+		}
+
+		// 内容使用标签
+		.content, .behaviour {
+			margin: 0 20px 20px;
+
+			&__tags {
+				padding: 20px;
+
+				.catagroy {
+					color: $fontDarkColor;
+					font-size: 14px;
+					line-height: 30px;
+				}
+			}
+		}
+
+		.behaviour {
+			margin: 0 0 20px 0;
+		}
+	}
+
+	.knowledge-main {
+		padding: 16px;
+	}
+
+	.chart-card {
+		/deep/ .el-card__body {
+			padding: 0;
+		}
+	}
+}
